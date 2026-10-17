@@ -4,15 +4,35 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     flake-utils.url = "github:numtide/flake-utils";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      treefmt-nix,
+    }:
     let
-      linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
+      linuxSystems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
     in
-    flake-utils.lib.eachSystem linuxSystems (system:
+    flake-utils.lib.eachSystem linuxSystems (
+      system:
       let
         pkgs = import nixpkgs { inherit system; };
+
+        treefmtEval = treefmt-nix.lib.evalModule pkgs {
+          projectRootFile = "flake.nix";
+          programs.nixfmt.enable = true;
+          programs.clang-format.enable = true;
+        };
 
         kde-set-mode = pkgs.stdenv.mkDerivation {
           pname = "kde-set-mode";
@@ -53,5 +73,8 @@
           inherit kde-set-mode;
           default = kde-set-mode;
         };
-      });
+        formatter = treefmtEval.config.build.wrapper;
+        checks.formatting = treefmtEval.config.build.check self;
+      }
+    );
 }
