@@ -7,7 +7,10 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
+    let
+      linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
+    in
+    flake-utils.lib.eachSystem linuxSystems (system:
       let
         pkgs = import nixpkgs { inherit system; };
 
@@ -41,7 +44,7 @@
           meta = {
             description = "Set a KWin output's resolution and refresh rate via kde-output-management-v2";
             mainProgram = "kde-set-mode";
-            platforms = [ "x86_64-linux" ];
+            platforms = linuxSystems;
           };
         };
       in

@@ -5,7 +5,7 @@ Nix flake providing **kde-set-mode**, a command-line tool that sets a KWin outpu
 - `packages.<system>.kde-set-mode` — the package, installing the `kde-set-mode` binary at `bin/kde-set-mode`.
 - `packages.<system>.default` — the same package.
 
-Packages are the flake's only outputs, and `x86_64-linux` is the only system it defines them for; the package's `meta.platforms` is `[ "x86_64-linux" ]`.
+Packages are the flake's only outputs, defined for `x86_64-linux` and `aarch64-linux`, which is also what the package's `meta.platforms` declares.
 
 Consume the package from a flake input:
 
