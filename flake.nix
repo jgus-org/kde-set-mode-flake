@@ -3,7 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-lib = {
+      url = "github:jgus-org/flake-lib/v1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,16 +17,10 @@
     {
       self,
       nixpkgs,
-      flake-utils,
+      flake-lib,
       treefmt-nix,
     }:
-    let
-      linuxSystems = [
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-    in
-    flake-utils.lib.eachSystem linuxSystems (
+    flake-lib.lib.eachDefaultLinuxSystem (
       system:
       let
         pkgs = import nixpkgs { inherit system; };
@@ -64,7 +61,7 @@
           meta = {
             description = "Set a KWin output's resolution and refresh rate via kde-output-management-v2";
             mainProgram = "kde-set-mode";
-            platforms = linuxSystems;
+            platforms = flake-lib.lib.defaultLinuxSystems;
           };
         };
       in
