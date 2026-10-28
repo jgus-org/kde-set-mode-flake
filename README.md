@@ -40,3 +40,5 @@ Outputs are addressed by the name KWin reports for them, matched exactly, so the
 The change lands on the live session. If the output does not already advertise the requested mode, the tool adds it as a custom mode — with reduced blanking disabled — and then selects it; an output already advertising a mode of that size within 1 Hz of the requested refresh has that mode selected instead. A mode the compositor refuses is reported as an apply failure. The tool never reverts a change it applied.
 
 Mode setting is all it does: it changes resolution and refresh rate, and nothing else about an output.
+
+See [LICENSE.md](LICENSE.md) for licensing and copyright, and [NOTICE.md](NOTICE.md) for the terms of upstream and distributed artifacts.
